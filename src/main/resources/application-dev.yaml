@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/product-db
+    username: postgres
+    password: password
+
+logging:
+  level:
+    com.vednovak.manager: trace
+
+server:
+  port: 8081

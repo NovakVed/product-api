@@ -1,0 +1,33 @@
+services:
+  database:
+    image: postgres:17-alpine
+    container_name: product-db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=product-db
+    ports:
+      - '5432:5432'
+    volumes:
+      - product-db:/var/lib/postgresql/data
+
+#  # TODO - use env specific port-forwarding config
+#  service:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: product-api
+#    restart: always
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/product-db
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=password
+#    ports:
+#      - '8080:8080'
+#      - '8000:8000'
+#    depends_on:
+#      - database
+
+volumes:
+  product-db:

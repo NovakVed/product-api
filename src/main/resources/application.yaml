@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: product-api
+  profiles:
+    active: dev
+  sql:
+    init:
+      mode: always
+
+springdoc:
+  swagger-ui:
+    operationsSorter: method
