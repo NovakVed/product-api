@@ -20,6 +20,7 @@ services:
 #    container_name: product-api
 #    restart: always
 #    environment:
+#       TODO: why not jdbc:postgresql://localhost:5432/product-db ??
 #      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/product-db
 #      - SPRING_DATASOURCE_USERNAME=postgres
 #      - SPRING_DATASOURCE_PASSWORD=password

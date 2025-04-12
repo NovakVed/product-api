@@ -28,6 +28,7 @@ public class ProductController {
 
     // TODO: return 201 Created instead!
     // TODO: return correct http status codes for each request!
+    // TODO: add auth for CRUD operations on product
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@RequestBody final ProductRequest productRequest) {
         final ProductResponse createdProduct = productService.createProduct(productRequest);

@@ -26,7 +26,7 @@ public class DefaultMessageService implements MessageService {
     public String getMessage(final String key) {
         try {
             return messageSource.getMessage(key, null, Locale.getDefault());
-        } catch (NoSuchMessageException ex) {
+        } catch (final NoSuchMessageException ex) {
             log.error("Message key '{}' not found.", key, ex);
             return StringUtils.join(MESSAGE_NOT_FOUND_FOR_KEY, key);
         }
@@ -36,7 +36,7 @@ public class DefaultMessageService implements MessageService {
     public String getMessage(final String key, final Object... args) {
         try {
             return messageSource.getMessage(key, args, Locale.getDefault());
-        } catch (NoSuchMessageException ex) {
+        } catch (final NoSuchMessageException ex) {
             log.error("Message key '{}' not found.", key, ex);
             return StringUtils.join(MESSAGE_NOT_FOUND_FOR_KEY, key);
         }
