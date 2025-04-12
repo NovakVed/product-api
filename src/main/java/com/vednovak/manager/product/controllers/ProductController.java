@@ -4,19 +4,27 @@ import com.vednovak.manager.product.data.dtos.ProductRequest;
 import com.vednovak.manager.product.data.dtos.ProductResponse;
 import com.vednovak.manager.product.services.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 
+import static com.vednovak.manager.product.utils.ProductConstants.*;
+
 // TODO: add ci.yaml for git (CI pipeline)
 // TODO: add swagger doc!
 // TODO: return correct http status codes for each request!
 @RestController
 @RequestMapping(ProductController.ENDPOINT)
+@Validated
 @Tag(name = "Product API", description = "ADD SOME DESCRIPTION HERE") // TODO: add desc
 public class ProductController {
 
@@ -30,7 +38,7 @@ public class ProductController {
 
     // TODO: add auth for CRUD operations on product
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(@RequestBody final ProductRequest productRequest) {
+    public ResponseEntity<ProductResponse> createProduct(@RequestBody @Valid final ProductRequest productRequest) {
         final ProductResponse createdProduct = productService.createProduct(productRequest);
         // TODO: check why do you need location?
         final URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -42,8 +50,12 @@ public class ProductController {
     }
 
     @GetMapping(value = "/{productCode}", produces = MediaType.APPLICATION_JSON_VALUE)
-    // TODO: add validation
-    public ProductResponse getProduct(@PathVariable final String productCode) {
+    public ProductResponse getProduct(
+            @PathVariable
+            @Valid
+            @NotBlank(message = IS_REQUIRED_MESSAGE)
+            @Size(min = 10, max = 10, message = "must be exactly 10 characters")
+            @Pattern(regexp = ALLOWED_TEXT_REGEX, message = ALLOWED_TEXT_REGEX_VALIDATION_MESSAGE) final String productCode) {
         return productService.getProductByProductCode(productCode);
     }
 

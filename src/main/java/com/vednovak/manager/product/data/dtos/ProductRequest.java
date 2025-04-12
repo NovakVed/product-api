@@ -1,32 +1,31 @@
 package com.vednovak.manager.product.data.dtos;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
-// TODO: double check all validations
+import static com.vednovak.manager.product.utils.ProductConstants.*;
+
 @Data
 @AllArgsConstructor
 public class ProductRequest {
 
-    @NotBlank(message = "")
-    @Size(min = 10, max = 10, message = "")
+    @NotBlank(message = IS_REQUIRED_MESSAGE)
+    @Size(min = CODE_LENGTH, max = CODE_LENGTH, message = CODE_LENGTH_VALIDATION_MESSAGE)
+    @Pattern(regexp = ALLOWED_TEXT_REGEX, message = ALLOWED_TEXT_REGEX_VALIDATION_MESSAGE)
     private String code;
 
-    @NotBlank(message = "")
+    @NotBlank(message = IS_REQUIRED_MESSAGE)
+    @Size(max = NAME_MAX_LENGTH, message = NAME_LENGTH_VALIDATION_MESSAGE)
+    @Pattern(regexp = ALLOWED_TEXT_REGEX, message = ALLOWED_TEXT_REGEX_VALIDATION_MESSAGE)
     private String name;
 
-    @NotBlank(message = "")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
-    @Digits(integer = 38, fraction = 2, message = "Price format is invalid")
+    @NotNull(message = IS_REQUIRED_MESSAGE)
+    @DecimalMin(value = PRICE_MINIMUM, message = PRICE_MINIMUM_VALIDATION_MESSAGE)
+    @Digits(integer = PRICE_MAX_INTEGER_DIGITS, fraction = PRICE_MAX_FRACTION_DIGITS, message = PRICE_FORMAT_VALIDATION_MESSAGE)
     private BigDecimal priceEur;
 
-    // TODO: add that default value is false if not provided, if you even need that?
-    // TODO: add some validation?
-    private boolean isAvailable;
+    private boolean isAvailable; // Default value is false
 }

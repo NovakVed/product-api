@@ -1,6 +1,7 @@
 package com.vednovak.manager.product.services.impl;
 
 import com.vednovak.manager.currency.services.CurrencyConversionService;
+import com.vednovak.manager.message.services.MessageService;
 import com.vednovak.manager.product.data.models.Product;
 import com.vednovak.manager.product.data.dtos.ProductRequest;
 import com.vednovak.manager.product.data.dtos.ProductResponse;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.vednovak.manager.product.utils.ProductConstants.ERROR_PRODUCT_NOT_FOUND;
+
 // TODO: add final to everything where you can!
 // TODO: apply best clean code practices
 @Slf4j
@@ -24,15 +27,18 @@ public class DefaultProductService implements ProductService {
     private final CurrencyConversionService currencyConversionService;
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final MessageService messageService;
 
     public DefaultProductService(
             final CurrencyConversionService currencyConversionService,
             final ProductRepository productRepository,
-            final ProductMapper productMapper
+            final ProductMapper productMapper,
+            final MessageService messageService
     ) {
         this.currencyConversionService = currencyConversionService;
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.messageService = messageService;
     }
 
     @Override
@@ -40,7 +46,7 @@ public class DefaultProductService implements ProductService {
         final String productCode = request.getCode();
         if (productCodeExists(productCode)) {
             log.warn("Product with code '{}' already exists", productCode);
-            throw new DuplicateProductCodeException("A product with this code already exists.");
+            throw new DuplicateProductCodeException(messageService.getMessage(ERROR_PRODUCT_NOT_FOUND));
         }
 
         final Product createdProduct = saveProduct(request);
@@ -69,7 +75,7 @@ public class DefaultProductService implements ProductService {
                 .findByCode(code)
                 .orElseThrow(() -> {
                     log.error("Product with code '{}' not found", code);
-                    return new ProductNotFoundByCodeException("Product not found.");
+                    return new ProductNotFoundByCodeException(messageService.getMessage(ERROR_PRODUCT_NOT_FOUND));
                 });
     }
 

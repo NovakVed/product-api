@@ -21,6 +21,8 @@ import static com.vednovak.manager.currency.utils.CurrencyConstants.*;
 @PropertySource("classpath:currencies.properties")
 public class DefaultCurrencyConversionService implements CurrencyConversionService {
 
+    private static final int ROUNDING_SCALE = 2;
+
     private final Set<String> supportedCurrencies;
     private final CurrencyExchangeRateService currencyExchangeRateService;
     private final MessageService messageService;
@@ -64,6 +66,6 @@ public class DefaultCurrencyConversionService implements CurrencyConversionServi
     }
 
     private BigDecimal calculateConvertedPrice(final BigDecimal basePrice, final BigDecimal exchangeRate) {
-        return basePrice.multiply(exchangeRate).setScale(2, RoundingMode.HALF_UP);
+        return basePrice.multiply(exchangeRate).setScale(ROUNDING_SCALE, RoundingMode.HALF_UP);
     }
 }
