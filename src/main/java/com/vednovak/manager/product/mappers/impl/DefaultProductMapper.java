@@ -4,7 +4,6 @@ import com.vednovak.manager.product.data.dtos.ProductRequest;
 import com.vednovak.manager.product.data.dtos.ProductResponse;
 import com.vednovak.manager.product.data.models.Product;
 import com.vednovak.manager.product.mappers.ProductMapper;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -13,7 +12,7 @@ import java.math.BigDecimal;
 public class DefaultProductMapper implements ProductMapper {
 
     @Override
-    public Product mapToProduct(ProductRequest request) {
+    public Product mapToProduct(final ProductRequest request) {
         return Product.builder()
                 .code(request.getCode())
                 .name(request.getName())
@@ -23,10 +22,7 @@ public class DefaultProductMapper implements ProductMapper {
     }
 
     @Override
-    public ProductResponse mapToProductResponse(Pair<Product, BigDecimal> productAndSellingRate) {
-        final Product product = productAndSellingRate.getLeft();
-        final BigDecimal sellingRate = productAndSellingRate.getRight();
-
+    public ProductResponse mapToProductResponse(final Product product, final BigDecimal sellingRate) {
         return new ProductResponse(
                 product.getCode(),
                 product.getName(),

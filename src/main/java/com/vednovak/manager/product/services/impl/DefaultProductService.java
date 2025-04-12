@@ -1,7 +1,6 @@
 package com.vednovak.manager.product.services.impl;
 
 import com.vednovak.manager.currency.services.CurrencyConversionService;
-import com.vednovak.manager.currency.services.CurrencyExchangeRateService;
 import com.vednovak.manager.product.data.models.Product;
 import com.vednovak.manager.product.data.dtos.ProductRequest;
 import com.vednovak.manager.product.data.dtos.ProductResponse;
@@ -11,7 +10,6 @@ import com.vednovak.manager.product.mappers.ProductMapper;
 import com.vednovak.manager.product.repositories.ProductRepository;
 import com.vednovak.manager.product.services.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -79,8 +77,7 @@ public class DefaultProductService implements ProductService {
     private ProductResponse createProductResponseFromProduct(final Product product) {
         final BigDecimal basePrice = product.getPriceEur();
         final BigDecimal sellingRate = currencyConversionService.convertPrice(basePrice, "USD"); // TODO: add supported currencies here
-        Pair<Product, BigDecimal> productAndSellingRate = Pair.of(product, sellingRate);
-        return productMapper.mapToProductResponse(productAndSellingRate);
+        return productMapper.mapToProductResponse(product, sellingRate);
     }
 
     // TODO: what if list is empty? or if some err occurs?
