@@ -17,8 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.vednovak.manager.currency.utils.CurrencyConstants.QUERY_STRING_QUESTION_MARK;
-import static com.vednovak.manager.currency.utils.CurrencyConstants.QUERY_STRING_SEPARATOR;
+import static com.vednovak.manager.currency.utils.CurrencyConstants.*;
 
 @Slf4j
 @Service
@@ -50,8 +49,10 @@ public class DefaultExchangeRateApiService implements ExchangeRateApiService {
     @Override
     public Set<CurrencyExchangeRateData> fetchExchangeRates() {
         final String url = buildApiUrl();
-        return fetchExchangeRatesFromApi(url)
-                .orElseThrow(() -> new CurrencyExchangeRateException("Failed to fetch exchange rates"));
+        return fetchExchangeRatesFromApi(url).orElseThrow(() -> {
+            log.error("Error fetching exchange rates from {}", url);
+            return new CurrencyExchangeRateException(ERROR_FAILED_EXCHANGE_RATE_DATA);
+        });
     }
 
     private String buildApiUrl() {
@@ -62,8 +63,12 @@ public class DefaultExchangeRateApiService implements ExchangeRateApiService {
     }
 
     private String buildDateQuery() {
-        final String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern(dateFormatForExchangeRateUrl));
+        final String currentDate = getCurrentFormattedDate();
         return StringUtils.join(queryDateForExchangeRateUrl, currentDate);
+    }
+
+    private String getCurrentFormattedDate() {
+        return LocalDate.now().format(DateTimeFormatter.ofPattern(dateFormatForExchangeRateUrl));
     }
 
     private String buildCurrencyQuery() {
@@ -83,9 +88,8 @@ public class DefaultExchangeRateApiService implements ExchangeRateApiService {
             }
 
             return Optional.of(Set.of(response));
-        } catch (RestClientException exception) {
-            log.error("Failed to fetch exchange rates from API. URL: {}, Error: {}", url, exception.getMessage(),
-                    exception);
+        } catch (final RestClientException exception) {
+            log.error("Failed to fetch exchange rates from API. URL: {}", url, exception);
             return Optional.empty();
         }
     }
