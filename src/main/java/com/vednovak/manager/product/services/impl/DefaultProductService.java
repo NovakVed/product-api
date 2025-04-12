@@ -1,5 +1,6 @@
 package com.vednovak.manager.product.services.impl;
 
+import com.vednovak.manager.currency.services.CurrencyConversionService;
 import com.vednovak.manager.currency.services.CurrencyExchangeRateService;
 import com.vednovak.manager.product.data.models.Product;
 import com.vednovak.manager.product.data.dtos.ProductRequest;
@@ -22,16 +23,16 @@ import java.util.List;
 @Service
 public class DefaultProductService implements ProductService {
 
-    private final CurrencyExchangeRateService currencyExchangeRateService;
+    private final CurrencyConversionService currencyConversionService;
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
     public DefaultProductService(
-            final CurrencyExchangeRateService currencyExchangeRateService,
+            final CurrencyConversionService currencyConversionService,
             final ProductRepository productRepository,
             final ProductMapper productMapper
     ) {
-        this.currencyExchangeRateService = currencyExchangeRateService;
+        this.currencyConversionService = currencyConversionService;
         this.productRepository = productRepository;
         this.productMapper = productMapper;
     }
@@ -77,7 +78,7 @@ public class DefaultProductService implements ProductService {
     // TODO: maybe use productMapper.mapToProductRespone instead of this method? check to see what is more practical!
     private ProductResponse createProductResponseFromProduct(final Product product) {
         final BigDecimal basePrice = product.getPriceEur();
-        final BigDecimal sellingRate = currencyExchangeRateService.convertPriceForCurrency(basePrice, "USD"); // TODO: add supported currencies here
+        final BigDecimal sellingRate = currencyConversionService.convertPrice(basePrice, "USD"); // TODO: add supported currencies here
         Pair<Product, BigDecimal> productAndSellingRate = Pair.of(product, sellingRate);
         return productMapper.mapToProductResponse(productAndSellingRate);
     }
