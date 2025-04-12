@@ -17,9 +17,8 @@ import java.util.Set;
 @PropertySource("classpath:currencies.properties")
 public class DefaultCurrencyConversionService implements CurrencyConversionService {
 
-    private final CurrencyExchangeRateService currencyExchangeRateService;
-
     private final Set<String> supportedCurrencies;
+    private final CurrencyExchangeRateService currencyExchangeRateService;
 
     public DefaultCurrencyConversionService(
             @Value("${supported.currencies}") final Set<String> supportedCurrencies,

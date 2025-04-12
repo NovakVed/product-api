@@ -16,7 +16,9 @@ public class DefaultExchangeRateValidationService implements ExchangeRateValidat
 
     private final Set<String> supportedCurrencies;
 
-    public DefaultExchangeRateValidationService(@Value("${supported.currencies}") final Set<String> supportedCurrencies) {
+    public DefaultExchangeRateValidationService(
+            @Value("${supported.currencies}") final Set<String> supportedCurrencies
+    ) {
         this.supportedCurrencies = supportedCurrencies;
     }
 
