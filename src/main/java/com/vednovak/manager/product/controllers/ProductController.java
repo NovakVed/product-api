@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+// TODO: add ci.yaml for git (CI pipeline)
 // TODO: add swagger doc!
 // TODO: return correct http status codes for each request!
 @RestController
