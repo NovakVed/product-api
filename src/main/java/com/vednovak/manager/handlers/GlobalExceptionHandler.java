@@ -1,5 +1,6 @@
 package com.vednovak.manager.handlers;
 
+import com.vednovak.manager.currency.exceptions.CurrencyExchangeRateException;
 import com.vednovak.manager.product.exceptions.ProductNotFoundByCodeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundByCodeException.class)
     public ResponseEntity<String> handleProductNotFoundByCodeException(final ProductNotFoundByCodeException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(CurrencyExchangeRateException.class)
+    public ResponseEntity<String> handleProductNotFoundByCodeException(final CurrencyExchangeRateException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage());
