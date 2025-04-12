@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: product-api
-
-logging:
-  level:
-    com.vednovak.product: warn
