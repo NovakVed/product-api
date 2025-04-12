@@ -1,7 +1,8 @@
 package com.vednovak.manager.product.services;
 
-import com.vednovak.manager.product.models.ProductRequest;
-import com.vednovak.manager.product.models.ProductResponse;
+
+import com.vednovak.manager.product.data.dtos.ProductRequest;
+import com.vednovak.manager.product.data.dtos.ProductResponse;
 
 import java.util.List;
 

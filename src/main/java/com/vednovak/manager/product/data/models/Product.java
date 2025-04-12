@@ -1,4 +1,4 @@
-package com.vednovak.manager.product.models;
+package com.vednovak.manager.product.data.models;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,9 +28,6 @@ public class Product {
 
     @Column(nullable = false)
     private BigDecimal priceEur;
-
-    @Column(nullable = false)
-    private BigDecimal priceUsd;
 
     private Boolean isAvailable;
 }

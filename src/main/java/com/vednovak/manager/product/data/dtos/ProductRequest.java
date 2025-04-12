@@ -1,4 +1,4 @@
-package com.vednovak.manager.product.models;
+package com.vednovak.manager.product.data.dtos;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;

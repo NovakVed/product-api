@@ -1,6 +1,6 @@
 package com.vednovak.manager.product.repositories;
 
-import com.vednovak.manager.product.models.Product;
+import com.vednovak.manager.product.data.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
