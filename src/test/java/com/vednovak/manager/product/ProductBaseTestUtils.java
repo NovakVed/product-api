@@ -8,9 +8,9 @@ import java.math.BigDecimal;
 
 public abstract class ProductBaseTestUtils {
 
-    protected static final String VALID_PRODUCT_ONE_CODE = "A000000001";
+    protected static final String VALID_PRODUCT_ONE_CODE = "TEST000001";
     protected static final String VALID_PRODUCT_ONE_NAME = "Apple iPhone 14 Pro";
-    protected static final String VALID_PRODUCT_TWO_CODE = "S000000001";
+    protected static final String VALID_PRODUCT_TWO_CODE = "TEST000002";
     protected static final String VALID_PRODUCT_TWO_NAME = "Samsung Galaxy S22";
 
     protected ProductResponse createTestProductResponseAvailable() {
