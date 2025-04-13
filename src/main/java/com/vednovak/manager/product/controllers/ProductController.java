@@ -44,7 +44,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // TODO: add auth for CRUD operations on product
+    // TODO: potential security improvement add auth for CRUD operations on product
     @Operation(summary = "Create a new product", description = "Creates a new product and returns the created product details")
     @ApiResponses(value = {
             @ApiResponse(responseCode = CREATED, description = "Product created successfully"),
@@ -66,7 +66,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@RequestBody @Valid final ProductRequest productRequest) {
         final ProductResponse createdProduct = productService.createProduct(productRequest);
-        // TODO: check why do you need location?
+
         final URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{code}")
                 .buildAndExpand(createdProduct.code())
