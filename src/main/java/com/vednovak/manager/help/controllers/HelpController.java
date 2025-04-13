@@ -12,27 +12,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// TODO: fix this!
+import static com.vednovak.manager.product.utils.SwaggerConstants.CLOSE;
+
 @Tag(name = "Help", description = "the Documentation API")
 @RestController
 @RequestMapping(HelpController.ENDPOINT)
 public class HelpController {
 
-    protected static final String ENDPOINT = "/v1/helps";
+        protected static final String ENDPOINT = "/v1/help";
 
-    @Operation(
-            summary = "Redirects to Swagger UI Documentation",
-            description = "contains instructions of installation, start and usage of Spring Boot app")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = SwaggerConstants.OK, description = "Documentation Found - Successful operation"),
-            @ApiResponse(responseCode = SwaggerConstants.INTERNAL_SERVER_ERROR, description = "Internal server error"),
-    })
-    @GetMapping
-    public ResponseEntity<String> redirectToDocumentation() {
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .header(HttpHeaders.LOCATION, "/swagger-ui/index.html")
-                .header(HttpHeaders.CONNECTION, "close") // TODO: create constants
-                .build();
-    }
+        @Operation(summary = "Redirect to OpenAPI Documentation", description = "Redirects the user to the OpenAPI page containing the API documentation")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = SwaggerConstants.OK, description = "Redirection successful"),
+                        @ApiResponse(responseCode = SwaggerConstants.INTERNAL_SERVER_ERROR, description = "Internal server error")
+        })
+        @GetMapping
+        public ResponseEntity<String> redirectToDocumentation() {
+                return ResponseEntity
+                                .status(HttpStatus.FOUND)
+                                .header(HttpHeaders.LOCATION, "/swagger-ui/index.html")
+                                .header(HttpHeaders.CONNECTION, CLOSE)
+                                .build();
+        }
 }

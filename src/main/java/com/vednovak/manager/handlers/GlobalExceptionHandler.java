@@ -1,28 +1,43 @@
 package com.vednovak.manager.handlers;
 
 import com.vednovak.manager.currency.exceptions.CurrencyExchangeRateException;
+import com.vednovak.manager.handlers.data.ErrorData;
+import com.vednovak.manager.handlers.data.ErrorDataList;
 import com.vednovak.manager.product.exceptions.ProductNotFoundException;
 import com.vednovak.manager.product.exceptions.ProductSaveException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
+import static java.util.Objects.isNull;
+
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationException(final MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
+    public ResponseEntity<ErrorDataList> handleValidationException(final MethodArgumentNotValidException ex) {
+        log.debug("Data validation failed on request", ex);
 
-        ex.getBindingResult().getFieldErrors().forEach(fieldError ->
-                errors.put(fieldError.getField(), fieldError.getDefaultMessage()));
+        final List<ErrorData> errorList = constructFieldErrorDataList(ex.getBindingResult().getFieldErrors());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorDataList.forErrors(errorList));
+    }
+
+    private List<ErrorData> constructFieldErrorDataList(final List<FieldError> fieldErrors) {
+        return fieldErrors.stream().map(error -> {
+            if (isNull(error)) {
+                return ErrorData.empty();
+            }
+            final String errorMessage = error.getDefaultMessage() != null ? error.getDefaultMessage() : "Invalid content";
+            return new ErrorData(errorMessage, error.getField());
+        }).toList();
     }
 
     @ExceptionHandler(ProductNotFoundException.class)

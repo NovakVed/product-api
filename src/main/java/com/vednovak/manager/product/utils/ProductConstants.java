@@ -2,11 +2,14 @@ package com.vednovak.manager.product.utils;
 
 public class ProductConstants {
 
-    public static final String IS_REQUIRED_MESSAGE = "is required.";
-    public static final String CODE_LENGTH_VALIDATION_MESSAGE = "must be exactly 10 characters.";
-    public static final String NAME_LENGTH_VALIDATION_MESSAGE = "must not exceed 255 characters.";
-    public static final String PRICE_MINIMUM_VALIDATION_MESSAGE = "must be greater than or equal to 0.";
-    public static final String PRICE_FORMAT_VALIDATION_MESSAGE = "must have up to 38 digits and 2 decimal places.";
+    public static final String IS_REQUIRED_MESSAGE = "is required";
+    public static final String CODE_LENGTH_VALIDATION_MESSAGE = "must be exactly 10 characters";
+    public static final String NAME_LENGTH_VALIDATION_MESSAGE = "must not exceed 255 characters";
+    public static final String PRICE_MINIMUM_VALIDATION_MESSAGE = "must be greater than or equal to 0";
+    public static final String PRICE_FORMAT_VALIDATION_MESSAGE = "must have up to 38 digits and 2 decimal places";
+
+    public static final String ALLOWED_CODE_REGEX = "^[a-zA-Z0-9]+$";
+    public static final String ALLOWED_CODE_REGEX_VALIDATION_MESSAGE = "must contain only alphanumeric characters";
     public static final String ALLOWED_TEXT_REGEX = "^[a-zA-Z0-9\\s-]+$";
     public static final String ALLOWED_TEXT_REGEX_VALIDATION_MESSAGE = "must contain only alphanumeric and allowed characters";
 
