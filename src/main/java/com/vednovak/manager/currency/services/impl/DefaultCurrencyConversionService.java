@@ -37,7 +37,7 @@ public class DefaultCurrencyConversionService implements CurrencyConversionServi
     }
 
     @Override
-    public BigDecimal convertPrice(BigDecimal basePrice, String currency) {
+    public BigDecimal convertPrice(BigDecimal basePrice, String currency) throws CurrencyExchangeRateException {
         Validate.notNull(basePrice, NULL_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("BigDecimal"));
         Validate.notBlank(currency, BLANK_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("String"));
 
@@ -49,14 +49,14 @@ public class DefaultCurrencyConversionService implements CurrencyConversionServi
         return calculateConvertedPrice(basePrice, exchangeRate);
     }
 
-    private void validateBasePrice(final BigDecimal basePrice) {
+    private void validateBasePrice(final BigDecimal basePrice) throws CurrencyExchangeRateException {
         if (basePrice.compareTo(BigDecimal.ZERO) < 0) {
             log.error("Invalid base price: {}. It must be a non-negative value.", basePrice);
             throw new CurrencyExchangeRateException(messageService.getMessage(ERROR_INVALID_BASE_PRICE));
         }
     }
 
-    private void validateCurrencySupport(final String currency) {
+    private void validateCurrencySupport(final String currency) throws CurrencyExchangeRateException {
         if (!supportedCurrencies.contains(currency)) {
             log.error("Invalid currency: {}. It is not supported.", currency);
             throw new CurrencyExchangeRateException(messageService.getMessage(ERROR_CURRENCY_NOT_SUPPORTED, currency));

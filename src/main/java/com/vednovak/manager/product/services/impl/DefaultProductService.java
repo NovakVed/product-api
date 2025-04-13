@@ -41,44 +41,48 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
-    public ProductResponse createProduct(final ProductRequest productRequest) {
+    public ProductResponse createProduct(final ProductRequest productRequest)
+            throws ProductSaveException, DuplicateProductCodeException, NullPointerException {
         validateProductCodeUniqueness(productRequest.getCode());
         final Product createdProduct = saveProduct(productRequest);
+
+        log.info("Product saved with code '{}'", createdProduct.getCode());
+
         return mapToProductResponse(createdProduct);
     }
 
-    private void validateProductCodeUniqueness(final String productCode) {
+    private void validateProductCodeUniqueness(final String productCode) throws DuplicateProductCodeException {
         if (productRepository.existsByCode(productCode)) {
             log.warn("Product with code '{}' already exists", productCode);
-            throw new DuplicateProductCodeException(messageService.getMessage(ERROR_PRODUCT_ALREADY_EXISTS));
+            throw new DuplicateProductCodeException(messageService.getMessage(ERROR_PRODUCT_ALREADY_EXISTS, productCode));
         }
     }
 
-    private Product saveProduct(final ProductRequest productRequest) {
+    private Product saveProduct(final ProductRequest productRequest)
+            throws ProductSaveException, NullPointerException {
         try {
             final Product product = productMapper.mapToProduct(productRequest);
             return productRepository.save(product);
         } catch (IllegalArgumentException | OptimisticLockingFailureException e) {
-            log.error("Failed to save product: {}", e.getMessage(), e);
             throw new ProductSaveException(messageService.getMessage(ERROR_PRODUCT_SAVE));
         }
     }
 
     @Override
-    public ProductResponse findProductByCode(final String productCode) {
+    public ProductResponse findProductByCode(final String productCode)
+            throws ProductNotFoundException, NullPointerException {
         final Product product = findProductByCodeOrElseThrow(productCode);
         return mapToProductResponse(product);
     }
 
-    private Product findProductByCodeOrElseThrow(final String productCode) {
+    private Product findProductByCodeOrElseThrow(final String productCode) throws ProductNotFoundException {
         return productRepository.findByCode(productCode)
-                .orElseThrow(() -> {
-                    log.error("Product with code '{}' not found", productCode);
-                    return new ProductNotFoundException(messageService.getMessage(ERROR_PRODUCT_NOT_FOUND));
-                });
+                .orElseThrow(() ->
+                    new ProductNotFoundException(messageService.getMessage(ERROR_PRODUCT_NOT_FOUND, productCode))
+                );
     }
 
-    private ProductResponse mapToProductResponse(final Product product) {
+    private ProductResponse mapToProductResponse(final Product product) throws NullPointerException {
         final BigDecimal basePrice = product.getPriceEur();
         // TODO: improve by make this per user / per request instead of hardcoding it like this!
         final BigDecimal convertedPrice = currencyConversionService.convertPrice(basePrice, "USD");
@@ -86,7 +90,7 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getProducts() {
+    public List<ProductResponse> getProducts() throws NullPointerException {
         return productRepository.findAll().stream()
                 .map(this::mapToProductResponse)
                 .toList();

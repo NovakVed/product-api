@@ -4,6 +4,9 @@ import com.vednovak.manager.handlers.data.ErrorData;
 import com.vednovak.manager.handlers.data.ErrorDataList;
 import com.vednovak.manager.product.data.dtos.ProductRequest;
 import com.vednovak.manager.product.data.dtos.ProductResponse;
+import com.vednovak.manager.product.exceptions.DuplicateProductCodeException;
+import com.vednovak.manager.product.exceptions.ProductNotFoundException;
+import com.vednovak.manager.product.exceptions.ProductSaveException;
 import com.vednovak.manager.product.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -64,7 +67,8 @@ public class ProductController {
                     ))
     })
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(@RequestBody @Valid final ProductRequest productRequest) {
+    public ResponseEntity<ProductResponse> createProduct(@RequestBody @Valid final ProductRequest productRequest)
+            throws ProductSaveException, DuplicateProductCodeException, NullPointerException {
         final ProductResponse createdProduct = productService.createProduct(productRequest);
 
         final URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -117,7 +121,8 @@ public class ProductController {
             @Valid
             @NotBlank(message = IS_REQUIRED_MESSAGE)
             @Size(min = CODE_LENGTH, max = CODE_LENGTH, message = CODE_LENGTH_VALIDATION_MESSAGE)
-            @Pattern(regexp = ALLOWED_CODE_REGEX, message = ALLOWED_CODE_REGEX_VALIDATION_MESSAGE) final String code) {
+            @Pattern(regexp = ALLOWED_CODE_REGEX, message = ALLOWED_CODE_REGEX_VALIDATION_MESSAGE) final String code)
+            throws ProductNotFoundException, NullPointerException {
         return productService.findProductByCode(code);
     }
 
@@ -134,11 +139,7 @@ public class ProductController {
             )
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ProductResponse> getProducts() {
+    public List<ProductResponse> getProducts() throws NullPointerException {
         return productService.getProducts();
     }
-
-    // TODO: add PUT for product update
-    // TODO: add DELETE for product deletion
-    // TODO: maybe add getAvailableProducts?
 }

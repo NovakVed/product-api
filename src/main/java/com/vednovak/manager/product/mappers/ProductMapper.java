@@ -7,6 +7,6 @@ import com.vednovak.manager.product.data.models.Product;
 import java.math.BigDecimal;
 
 public interface ProductMapper {
-    Product mapToProduct(ProductRequest productRequest);
-    ProductResponse mapToProductResponse(Product product, BigDecimal sellingRate);
+    Product mapToProduct(ProductRequest productRequest) throws NullPointerException;
+    ProductResponse mapToProductResponse(Product product, BigDecimal sellingRate) throws NullPointerException;
 }

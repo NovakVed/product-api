@@ -2,6 +2,7 @@ package com.vednovak.manager.currency.services.impl;
 
 import com.vednovak.manager.currency.data.dtos.CurrencyExchangeRateData;
 import com.vednovak.manager.currency.exceptions.CurrencyExchangeRateException;
+import com.vednovak.manager.currency.exceptions.EmptySupportedCurrenciesConfig;
 import com.vednovak.manager.currency.services.CurrencyExchangeRateService;
 import com.vednovak.manager.currency.services.ExchangeRateApiService;
 import com.vednovak.manager.currency.services.ExchangeRateValidationService;
@@ -49,7 +50,10 @@ public class DefaultCurrencyExchangeRateService implements CurrencyExchangeRateS
     }
 
     @Override
-    public void updateExchangeRates() {
+    public void updateExchangeRates()
+            throws CurrencyExchangeRateException, EmptySupportedCurrenciesConfig {
+        validationService.validateSupportedCurrenciesNotEmpty();
+
         try {
             final Set<CurrencyExchangeRateData> fetchedExchangeRates = exchangeRateApiService.fetchExchangeRates();
             validationService.validateFetchedExchangeRates(fetchedExchangeRates);
@@ -61,17 +65,19 @@ public class DefaultCurrencyExchangeRateService implements CurrencyExchangeRateS
         }
     }
 
-    private void removeNoLongerSupportedExchangeRates() {
+    private void removeNoLongerSupportedExchangeRates()
+            throws NullPointerException, UnsupportedOperationException, ClassCastException {
         exchangeRates.keySet().removeIf(currency -> !supportedCurrencies.contains(currency));
     }
 
-    private void saveExchangeRate(final CurrencyExchangeRateData exchangeRate) {
+    private void saveExchangeRate(final CurrencyExchangeRateData exchangeRate)
+            throws UnsupportedOperationException, ClassCastException, NullPointerException, IllegalArgumentException {
         final String currency = exchangeRate.getCurrency();
         final BigDecimal sellingRate = parseSellingRate(exchangeRate.getSellingRate());
         exchangeRates.put(currency, sellingRate);
     }
 
-    private BigDecimal parseSellingRate(final String currencySellingRate) {
+    private BigDecimal parseSellingRate(final String currencySellingRate) throws NumberFormatException {
         final String normalizedRate = StringUtils.replace(currencySellingRate, RADIX_CHARACTER_SEARCH, RADIX_CHARACTER_REPLACEMENT);
         return new BigDecimal(normalizedRate);
     }

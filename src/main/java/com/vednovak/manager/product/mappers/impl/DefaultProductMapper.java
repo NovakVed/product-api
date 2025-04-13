@@ -15,7 +15,7 @@ import static com.vednovak.manager.product.utils.ProductConstants.NULL_PARAMETER
 public class DefaultProductMapper implements ProductMapper {
 
     @Override
-    public Product mapToProduct(final ProductRequest productRequest) {
+    public Product mapToProduct(final ProductRequest productRequest) throws NullPointerException {
         Validate.notNull(productRequest, NULL_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("ProductRequest"));
 
         return Product.builder()
@@ -27,7 +27,7 @@ public class DefaultProductMapper implements ProductMapper {
     }
 
     @Override
-    public ProductResponse mapToProductResponse(final Product product, final BigDecimal sellingRate) {
+    public ProductResponse mapToProductResponse(final Product product, final BigDecimal sellingRate) throws NullPointerException {
         Validate.notNull(product, NULL_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("Product"));
         Validate.notNull(sellingRate, NULL_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("sellingRate"));
 

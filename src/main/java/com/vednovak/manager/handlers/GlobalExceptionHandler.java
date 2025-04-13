@@ -1,6 +1,7 @@
 package com.vednovak.manager.handlers;
 
 import com.vednovak.manager.currency.exceptions.CurrencyExchangeRateException;
+import com.vednovak.manager.currency.exceptions.EmptySupportedCurrenciesConfig;
 import com.vednovak.manager.handlers.data.ErrorData;
 import com.vednovak.manager.handlers.data.ErrorDataList;
 import com.vednovak.manager.product.exceptions.DuplicateProductCodeException;
@@ -58,6 +59,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ErrorData> handleProductNotFoundByCodeException(final ProductNotFoundException ex) {
+        log.error("Product not found. {}", ex.getMessage(), ex);
+
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(ErrorData.withError(ex.getMessage()));
@@ -65,6 +68,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CurrencyExchangeRateException.class)
     public ResponseEntity<ErrorData> handleProductNotFoundByCodeException(final CurrencyExchangeRateException ex) {
+        log.error("Error fetching exchange rates from {}", ex.getMessage(), ex);
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ErrorData.withError(ex.getMessage()));
@@ -79,8 +84,38 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProductSaveException.class)
     public ResponseEntity<ErrorData> handleProductSaveException(final ProductSaveException ex) {
+        log.error("Failed to save product: {}", ex.getMessage(), ex);
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorData.withError(ex.getMessage()));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorData> handleUnexpectedExceptions(final RuntimeException ex) {
+        log.error("Unexpected application error occurred", ex);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ErrorData.withError("An unexpected application error occurred, please try again later or contact user service"));
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ErrorData> handleNullPointerExceptions(final NullPointerException ex) {
+        log.error("NullPointer exception occurred", ex);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ErrorData.withError(ex.getMessage()));
+    }
+
+    @ExceptionHandler(EmptySupportedCurrenciesConfig.class)
+    public ResponseEntity<ErrorData> handleEmptySupportedCurrenciesConfigExceptions(final EmptySupportedCurrenciesConfig ex) {
+        log.error("Error supported currencies list in application.properties are empty. " +
+                "Please check your configuration: {}", ex.getMessage(), ex);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ErrorData.withError(ex.getMessage()));
     }
 }
