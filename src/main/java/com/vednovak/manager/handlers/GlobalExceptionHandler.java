@@ -91,6 +91,16 @@ public class GlobalExceptionHandler {
                 .body(ErrorData.withError(ex.getMessage()));
     }
 
+    @ExceptionHandler(EmptySupportedCurrenciesConfig.class)
+    public ResponseEntity<ErrorData> handleEmptySupportedCurrenciesConfigExceptions(final EmptySupportedCurrenciesConfig ex) {
+        log.error("Error supported currencies list in application.properties are empty. " +
+                "Please check your configuration: {}", ex.getMessage(), ex);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ErrorData.withError(ex.getMessage()));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorData> handleUnexpectedExceptions(final RuntimeException ex) {
         log.error("Unexpected application error occurred", ex);
@@ -103,16 +113,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<ErrorData> handleNullPointerExceptions(final NullPointerException ex) {
         log.error("NullPointer exception occurred", ex);
-
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ErrorData.withError(ex.getMessage()));
-    }
-
-    @ExceptionHandler(EmptySupportedCurrenciesConfig.class)
-    public ResponseEntity<ErrorData> handleEmptySupportedCurrenciesConfigExceptions(final EmptySupportedCurrenciesConfig ex) {
-        log.error("Error supported currencies list in application.properties are empty. " +
-                "Please check your configuration: {}", ex.getMessage(), ex);
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
