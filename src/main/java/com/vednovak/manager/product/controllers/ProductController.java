@@ -114,7 +114,6 @@ public class ProductController {
                     )
             )
             @PathVariable
-            @Valid
             @NotBlank(message = IS_REQUIRED_MESSAGE)
             @Size(min = 10, max = 10, message = "must be exactly 10 characters")
             @Pattern(regexp = ALLOWED_CODE_REGEX, message = ALLOWED_CODE_REGEX_VALIDATION_MESSAGE) final String code) {

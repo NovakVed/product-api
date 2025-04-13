@@ -3,6 +3,7 @@ package com.vednovak.manager.handlers;
 import com.vednovak.manager.currency.exceptions.CurrencyExchangeRateException;
 import com.vednovak.manager.handlers.data.ErrorData;
 import com.vednovak.manager.handlers.data.ErrorDataList;
+import com.vednovak.manager.product.exceptions.DuplicateProductCodeException;
 import com.vednovak.manager.product.exceptions.ProductNotFoundException;
 import com.vednovak.manager.product.exceptions.ProductSaveException;
 import lombok.extern.slf4j.Slf4j;
@@ -10,15 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
 
 import static java.util.Objects.isNull;
 
 @Slf4j
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -41,23 +42,30 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<String> handleProductNotFoundByCodeException(final ProductNotFoundException ex) {
+    public ResponseEntity<ErrorData> handleProductNotFoundByCodeException(final ProductNotFoundException ex) {
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(ex.getMessage());
+                .status(HttpStatus.NOT_FOUND)
+                .body(ErrorData.withError(ex.getMessage()));
     }
 
     @ExceptionHandler(CurrencyExchangeRateException.class)
-    public ResponseEntity<String> handleProductNotFoundByCodeException(final CurrencyExchangeRateException ex) {
+    public ResponseEntity<ErrorData> handleProductNotFoundByCodeException(final CurrencyExchangeRateException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ex.getMessage());
+                .body(ErrorData.withError(ex.getMessage()));
+    }
+
+    @ExceptionHandler(DuplicateProductCodeException.class)
+    public ResponseEntity<ErrorData> handleDuplicateProductException(final DuplicateProductCodeException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorData.withError(ex.getMessage()));
     }
 
     @ExceptionHandler(ProductSaveException.class)
-    public ResponseEntity<String> handleProductSaveException(final ProductSaveException ex) {
+    public ResponseEntity<ErrorData> handleProductSaveException(final ProductSaveException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ex.getMessage());
+                .body(ErrorData.withError(ex.getMessage()));
     }
 }
