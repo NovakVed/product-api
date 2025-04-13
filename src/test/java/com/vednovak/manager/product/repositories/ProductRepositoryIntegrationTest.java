@@ -21,13 +21,13 @@ class ProductRepositoryIntegrationTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given product exists by code, when checking existence, then return true")
-    void givenProductExistsByCodeWhenCheckingExistenceThenReturnTrue() {
+    void givenProductExistsByCode_WhenCheckingExistence_ThenReturnTrue() {
         // given
-        final Product product = createTestProduct();
-        String existingCode = VALID_PRODUCT_ONE_CODE;
+        final Product existingProduct = createTestProduct();
+        final String existingCode = existingProduct.getCode();
 
         // when
-        productRepository.save(product);
+        productRepository.save(existingProduct);
 
         // then
         boolean exists = productRepository.existsByCode(existingCode);
@@ -36,8 +36,8 @@ class ProductRepositoryIntegrationTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given product does not exist by code, when checking existence, then return false")
-    void givenProductDoesNotExistByCodeWhenCheckingExistenceThenReturnFalse() {
-        String nonExistingCode = "NONEXISTENT";
+    void givenProductDoesNotExistByCode_WhenCheckingExistence_ThenReturnFalse() {
+        final String nonExistingCode = "NONEXISTENT";
 
         boolean exists = productRepository.existsByCode(nonExistingCode);
 
@@ -46,10 +46,10 @@ class ProductRepositoryIntegrationTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given product exists by code, when finding product, then return product")
-    void givenProductExistsByCodeWhenFindingProductThenReturnProduct() {
+    void givenProductExistsByCode_WhenFindingProduct_ThenReturnProduct() {
         // given
         final Product existingProduct = createTestProduct();
-        String existingCode = VALID_PRODUCT_ONE_CODE;
+        final String existingCode = existingProduct.getCode();
 
         // when
         productRepository.save(existingProduct);
@@ -63,8 +63,8 @@ class ProductRepositoryIntegrationTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given product does not exist by code, when finding product, then return empty")
-    void givenProductDoesNotExistByCodeWhenFindingProductThenReturnEmpty() {
-        String nonExistingCode = "NONEXISTENT";
+    void givenProductDoesNotExistByCode_WhenFindingProduct_ThenReturnEmpty() {
+        final String nonExistingCode = "NONEXISTENT";
 
         Optional<Product> product = productRepository.findByCode(nonExistingCode);
 

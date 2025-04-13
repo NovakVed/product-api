@@ -43,7 +43,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given valid product code, when retrieving product, then return product details")
-    void givenValidCodeWhenGetProductThenReturnProductDetails() throws Exception {
+    void givenValidCode_WhenGetProduct_ThenReturnProductDetails() throws Exception {
         final ProductResponse productResponse = createTestProductResponseAvailable();
 
         when(productService.findProductByCode(VALID_PRODUCT_ONE_CODE))
@@ -61,7 +61,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given invalid product code format, when retrieving product, then return 400 Bad Request")
-    void givenInvalidCodeFormatWhenGetProductThenReturnBadRequest() throws Exception {
+    void givenInvalidCodeFormat_WhenGetProduct_ThenReturnBadRequest() throws Exception {
         when(productService.findProductByCode(INVALID_CODE))
                 .thenThrow(new IllegalArgumentException("must contain only alphanumeric characters"));
 
@@ -73,7 +73,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given non-existent product code, when retrieving product, then return 404 Not Found")
-    void givenNonExistentCodeWhenGetProductThenReturnNotFound() throws Exception {
+    void givenNonExistentCode_WhenGetProduct_ThenReturnNotFound() throws Exception {
         final String productNotFoundMessage = "Product not found for code: " + NON_EXISTENT_CODE;
 
         when(productService.findProductByCode(NON_EXISTENT_CODE))
@@ -88,7 +88,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given valid product code, when unexpected exception occurs, then return 500 Internal Server Error")
-    void givenValidCodeWhenUnexpectedExceptionThenReturnInternalServerError() throws Exception {
+    void givenValidCode_WhenUnexpectedException_ThenReturnInternalServerError() throws Exception {
         when(productService.findProductByCode(VALID_PRODUCT_ONE_CODE)).thenThrow(RuntimeException.class);
 
         mockMvc.perform(get(getProductEndpointWithCode(VALID_PRODUCT_ONE_CODE)).accept(MediaType.APPLICATION_JSON))
@@ -99,7 +99,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given blank product code, when retrieving product, then return 400 Bad Request")
-    void givenBlankCodeWhenGetProductThenReturnBadRequest() throws Exception {
+    void givenBlankCode_WhenGetProduct_ThenReturnBadRequest() throws Exception {
         mockMvc.perform(get(getProductEndpointWithCode(StringUtils.SPACE)).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -119,7 +119,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given products exist, when retrieving all products, then return list of products")
-    void givenProductsExistWhenGetProductsThenReturnProductList() throws Exception {
+    void givenProductsExist_WhenGetProducts_ThenReturnProductList() throws Exception {
         ProductResponse product1 = createTestProductResponseAvailable();
         ProductResponse product2 = createTestProductResponseUnavailable();
 
@@ -142,7 +142,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given unexpected exception, when retrieving all products, then return 500 Internal Server Error")
-    void givenUnexpectedExceptionWhenGetProductsThenReturnInternalServerError() throws Exception {
+    void givenUnexpectedException_WhenGetProducts_ThenReturnInternalServerError() throws Exception {
         when(productService.getProducts()).thenThrow(RuntimeException.class);
 
         mockMvc.perform(get(ProductController.ENDPOINT).accept(MediaType.APPLICATION_JSON))
@@ -153,7 +153,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given valid product data, when creating product, then return created product details")
-    void givenValidProductDataWhenCreateProductThenReturnCreatedProductDetails() throws Exception {
+    void givenValidProductData_WhenCreateProduct_ThenReturnCreatedProductDetails() throws Exception {
         ProductResponse createdProduct = createTestProductResponseAvailable();
         ProductRequest productRequest = createTestProductRequest();
 
@@ -180,7 +180,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given invalid product data, when creating product, then return 400 Bad Request")
-    void givenInvalidProductDataWhenCreateProductThenReturnBadRequest() throws Exception {
+    void givenInvalidProductData_WhenCreateProduct_ThenReturnBadRequest() throws Exception {
         final String productRequest = createProductJson(
                 StringUtils.EMPTY,
                 StringUtils.EMPTY,
@@ -198,7 +198,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given unexpected exception, when creating product, then return 500 Internal Server Error")
-    void givenUnexpectedExceptionWhenCreateProductThenReturnInternalServerError() throws Exception {
+    void givenUnexpectedException_WhenCreateProduct_ThenReturnInternalServerError() throws Exception {
         ProductRequest productRequest = createTestProductRequest();
 
         when(productService.createProduct(productRequest)).thenThrow(RuntimeException.class);

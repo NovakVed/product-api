@@ -21,7 +21,7 @@ class ProductMapperTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given valid ProductRequest, when mapping to Product, then return valid Product")
-    void givenValidProductRequestWhenMappingToProductThenReturnValidProduct() {
+    void givenValidProductRequest_WhenMappingToProduct_ThenReturnValidProduct() {
         final ProductRequest productRequest = createTestProductRequest();
         final Product product = productMapper.mapToProduct(productRequest);
 
@@ -34,7 +34,7 @@ class ProductMapperTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given valid Product and sellingRate, when mapping to ProductResponse, then return valid ProductResponse")
-    void givenValidProductAndSellingRateWhenMappingToProductResponseThenReturnValidProductResponse() {
+    void givenValidProductAndSellingRate_WhenMappingToProductResponse_ThenReturnValidProductResponse() {
         final Product product = createTestProduct();
         final BigDecimal sellingRate = BigDecimal.valueOf(999.99);
 
@@ -50,7 +50,7 @@ class ProductMapperTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given null ProductRequest, when mapping to Product, then throw IllegalArgumentException")
-    void givenNullProductRequestWhenMappingToProductThenThrowIllegalArgumentException() {
+    void givenNullProductRequest_WhenMappingToProduct_ThenThrowIllegalArgumentException() {
         assertThatThrownBy(() -> productMapper.mapToProduct(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessageContaining("ProductRequest must not be null");
@@ -58,7 +58,7 @@ class ProductMapperTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given null Product, when mapping to ProductResponse, then throw IllegalArgumentException")
-    void givenNullProductWhenMappingToProductResponseThenThrowIllegalArgumentException() {
+    void givenNullProduct_WhenMappingToProductResponse_ThenThrowIllegalArgumentException() {
         final BigDecimal sellingRate = BigDecimal.valueOf(1.1);
 
         assertThatThrownBy(() -> productMapper.mapToProductResponse(null, sellingRate))
@@ -68,7 +68,7 @@ class ProductMapperTest extends ProductBaseTestUtils {
 
     @Test
     @DisplayName("Given null sellingRate, when mapping to ProductResponse, then throw IllegalArgumentException")
-    void givenNullSellingRateWhenMappingToProductResponseThenThrowIllegalArgumentException() {
+    void givenNullSellingRate_WhenMappingToProductResponse_ThenThrowIllegalArgumentException() {
         final Product product = createTestProduct();
 
         assertThatThrownBy(() -> productMapper.mapToProductResponse(product, null))
