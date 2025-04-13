@@ -38,7 +38,9 @@ public class DefaultCurrencyConversionService implements CurrencyConversionServi
 
     @Override
     public BigDecimal convertPrice(BigDecimal basePrice, String currency) {
-        Validate.notBlank(currency, ERROR_BLANK_CURRENCY);
+        Validate.notNull(basePrice, NULL_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("BigDecimal"));
+        Validate.notBlank(currency, BLANK_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("String"));
+
         validateBasePrice(basePrice);
         validateCurrencySupport(currency);
 
@@ -48,7 +50,7 @@ public class DefaultCurrencyConversionService implements CurrencyConversionServi
     }
 
     private void validateBasePrice(final BigDecimal basePrice) {
-        if (basePrice == null || basePrice.compareTo(BigDecimal.ZERO) < 0) {
+        if (basePrice.compareTo(BigDecimal.ZERO) < 0) {
             log.error("Invalid base price: {}. It must be a non-negative value.", basePrice);
             throw new CurrencyExchangeRateException(messageService.getMessage(ERROR_INVALID_BASE_PRICE));
         }

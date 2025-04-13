@@ -2,7 +2,6 @@ package com.vednovak.manager.currency.utils;
 
 public class CurrencyConstants {
 
-    public static final String ERROR_BLANK_CURRENCY = "error.blank.currency";
     public static final String ERROR_INVALID_BASE_PRICE = "error.invalid.base.price";
     public static final String ERROR_CURRENCY_NOT_SUPPORTED = "error.currency.not.supported";
     public static final String ERROR_FAILED_EXCHANGE_RATE_DATA = "error.failed.exchange.rate.data";
@@ -16,6 +15,9 @@ public class CurrencyConstants {
 
     public static final String JSON_PROPERTY_CURRENCY = "valuta";
     public static final String JSON_PROPERTY_SELLING_RATE = "prodajni_tecaj";
+
+    public static final String NULL_PARAMETER_ERROR_MESSAGE_TEMPLATE = "%s must not be null";
+    public static final String BLANK_PARAMETER_ERROR_MESSAGE_TEMPLATE = "%s must not be blank";
 
     private CurrencyConstants() {
         throw new IllegalStateException("Utility class");
