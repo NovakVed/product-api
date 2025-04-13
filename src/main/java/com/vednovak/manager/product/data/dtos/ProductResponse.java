@@ -18,9 +18,6 @@ public record ProductResponse(
         @Schema(description = "Price of the product in USD", example = "34.99")
         BigDecimal priceUsd,
 
-//        @Schema(description = "Map of supported prices in different currencies.", example = "{\"AUD\": 29.99, \"USD\": 34.99}")
-//        Map<String, BigDecimal> supportedPrices,
-
         @Schema(description = "Indicates whether the product is available", example = "true", defaultValue = "false")
         boolean isAvailable) {
 }

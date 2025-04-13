@@ -80,7 +80,8 @@ public class DefaultProductService implements ProductService {
 
     private ProductResponse mapToProductResponse(final Product product) {
         final BigDecimal basePrice = product.getPriceEur();
-        final BigDecimal convertedPrice = currencyConversionService.convertPrice(basePrice, "USD"); // TODO: add supported currencies here
+        // TODO: improve by make this per user / per request instead of hardcoding it like this!
+        final BigDecimal convertedPrice = currencyConversionService.convertPrice(basePrice, "USD");
         return productMapper.mapToProductResponse(product, convertedPrice);
     }
 
