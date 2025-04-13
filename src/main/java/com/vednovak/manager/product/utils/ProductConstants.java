@@ -18,6 +18,9 @@ public class ProductConstants {
 
     public static final String ERROR_PRODUCT_NOT_FOUND  = "error.product.not.found";
     public static final String ERROR_PRODUCT_ALREADY_EXISTS  = "error.product.already.exists";
+    public static final String ERROR_PRODUCT_SAVE  = "error.product.save";
+
+    public static final String NULL_PARAMETER_ERROR_MESSAGE_TEMPLATE = "%s must not be null";
 
     private ProductConstants() {
         throw new IllegalStateException("Utility class");

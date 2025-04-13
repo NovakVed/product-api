@@ -49,14 +49,14 @@ public class ProductController {
         return ResponseEntity.created(location).body(createdProduct);
     }
 
-    @GetMapping(value = "/{productCode}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ProductResponse getProduct(
             @PathVariable
             @Valid
             @NotBlank(message = IS_REQUIRED_MESSAGE)
             @Size(min = 10, max = 10, message = "must be exactly 10 characters")
-            @Pattern(regexp = ALLOWED_TEXT_REGEX, message = ALLOWED_TEXT_REGEX_VALIDATION_MESSAGE) final String productCode) {
-        return productService.getProductByProductCode(productCode);
+            @Pattern(regexp = ALLOWED_TEXT_REGEX, message = ALLOWED_TEXT_REGEX_VALIDATION_MESSAGE) final String code) {
+        return productService.findProductByCode(code);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
