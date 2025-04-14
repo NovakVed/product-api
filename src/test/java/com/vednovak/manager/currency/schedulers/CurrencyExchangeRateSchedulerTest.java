@@ -1,5 +1,6 @@
 package com.vednovak.manager.currency.schedulers;
 
+import com.vednovak.manager.currency.CurrencyBaseTestUtils;
 import com.vednovak.manager.currency.services.CurrencyExchangeRateService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,9 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class CurrencyExchangeRateSchedulerTest {
+class CurrencyExchangeRateSchedulerTest extends CurrencyBaseTestUtils {
+
+    private static final String RUNTIME_EXCEPTION_MESSAGE = "Test exception";
 
     @MockitoBean
     private CurrencyExchangeRateService currencyExchangeRateService;
@@ -21,16 +24,16 @@ class CurrencyExchangeRateSchedulerTest {
     void whenUpdateExchangeRatesCalled_ThenServiceUpdatesExchangeRates() {
         new CurrencyExchangeRateScheduler(currencyExchangeRateService).updateExchangeRates();
 
-        verify(currencyExchangeRateService, times(1)).updateExchangeRates();
+        verify(currencyExchangeRateService, times(WANTED_NUMBER_OF_INVOCATIONS)).updateExchangeRates();
     }
 
     @Test
     @DisplayName("When updateExchangeRates throws exception, then it is logged without propagation")
     void whenUpdateExchangeRatesThrowsException_ThenLogError() {
-        doThrow(new RuntimeException("Test exception")).when(currencyExchangeRateService).updateExchangeRates();
+        doThrow(new RuntimeException(RUNTIME_EXCEPTION_MESSAGE)).when(currencyExchangeRateService).updateExchangeRates();
 
         new CurrencyExchangeRateScheduler(currencyExchangeRateService).updateExchangeRates();
 
-        verify(currencyExchangeRateService, times(1)).updateExchangeRates();
+        verify(currencyExchangeRateService, times(WANTED_NUMBER_OF_INVOCATIONS)).updateExchangeRates();
     }
 }
