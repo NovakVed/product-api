@@ -23,11 +23,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
           POSTGRES_DB: product_db
-        options: >-
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Checkout project
@@ -38,14 +34,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Wait for PostgreSQL to be ready
-        run: |
-          for i in {1..10}; do
-            nc -z localhost 5432 && break
-            echo "Waiting for PostgreSQL..."
-            sleep 5
-          done
 
       - name: Build the application
         run: make build
