@@ -37,7 +37,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
     @MockitoBean
     private ProductService productService;
 
-    private String getProductEndpointWithCode(String code) {
+    private String getProductEndpointWithPath(String code) {
         return ProductController.ENDPOINT + "/" + code;
     }
 
@@ -49,7 +49,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
         when(productService.findProductByCode(VALID_PRODUCT_ONE_CODE))
                 .thenReturn(createTestProductResponseAvailable());
 
-        mockMvc.perform(get(getProductEndpointWithCode(VALID_PRODUCT_ONE_CODE)).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(getProductEndpointWithPath(VALID_PRODUCT_ONE_CODE)).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(productResponse.code()))
@@ -65,7 +65,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
         when(productService.findProductByCode(INVALID_CODE))
                 .thenThrow(new IllegalArgumentException("must contain only alphanumeric characters"));
 
-        mockMvc.perform(get(getProductEndpointWithCode(INVALID_CODE)).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(getProductEndpointWithPath(INVALID_CODE)).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errors").exists());
@@ -79,7 +79,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
         when(productService.findProductByCode(NON_EXISTENT_CODE))
                 .thenThrow(new ProductNotFoundException(productNotFoundMessage));
 
-        mockMvc.perform(get(getProductEndpointWithCode(NON_EXISTENT_CODE)).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(getProductEndpointWithPath(NON_EXISTENT_CODE)).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.error").exists())
@@ -91,7 +91,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
     void givenValidCode_WhenUnexpectedException_ThenReturnInternalServerError() throws Exception {
         when(productService.findProductByCode(VALID_PRODUCT_ONE_CODE)).thenThrow(RuntimeException.class);
 
-        mockMvc.perform(get(getProductEndpointWithCode(VALID_PRODUCT_ONE_CODE)).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(getProductEndpointWithPath(VALID_PRODUCT_ONE_CODE)).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.error").exists());
@@ -100,7 +100,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
     @Test
     @DisplayName("Given blank product code, when retrieving product, then return 400 Bad Request")
     void givenBlankCode_WhenGetProduct_ThenReturnBadRequest() throws Exception {
-        mockMvc.perform(get(getProductEndpointWithCode(StringUtils.SPACE)).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(getProductEndpointWithPath(StringUtils.SPACE)).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errors").exists());
@@ -111,7 +111,7 @@ class ProductControllerTest extends ProductBaseTestUtils {
     void givenInvalidCodeLengthWhenGetProductThenReturnBadRequest() throws Exception {
         final String errorMessage = "must be exactly 10 characters";
 
-        mockMvc.perform(get(getProductEndpointWithCode(SHORT_CODE)).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(getProductEndpointWithPath(SHORT_CODE)).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errors[0].error").value(errorMessage));
