@@ -15,14 +15,14 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
-        image: postgres:17
+      database:
+        image: postgres:17-alpine
         ports:
           - 5432:5432
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
-          POSTGRES_DB: product-db
+          POSTGRES_DB: product_db
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
