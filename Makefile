@@ -10,6 +10,7 @@ PRODUCTION_PROFILE = prod
 SPRING_PROFILE ?= $(DEVELOPMENT_PROFILE)
 
 DOCKER_COMPOSE = docker-compose
+DOCKER_COMPOSE_DB = database
 DOCKER_BUILD_WITH_ARG = docker build --build-arg
 
 .DEFAULT_GOAL := help
@@ -20,17 +21,17 @@ help:
 	@echo
 	@echo "Available commands:"
 	@echo "  make build                   - Build the project"
-	@echo "  make run                     - Run the application"
 	@echo "  make test                    - Run tests"
 	@echo "  make unpack                  - Extract the JAR file"
 	@echo "  make containerize            - Build the Docker image"
-	@echo "  make infra-up                - Start infrastructure with Docker Compose"
-	@echo "  make infra-down              - Stop infrastructure with Docker Compose"
-	@echo "  make dev                     - Run in development mode (default profile: dev)"
+	@echo "  make infra-up                - Set up project infrastructure using Docker Compose"
+	@echo "  make infra-down              - Clean up project infrastructure using Docker Compose"
+	@echo "  make dev-db                  - Run only the database service from Docker Compose"
+	@echo "  make dev                     - Run in development mode (default profile: dev)."
 	@echo "                                 Use SPRING_PROFILE to override and SPRING_PROPS for extra properties"
 	@echo
 
-.PHONY: all build run test unpack containerize infra-up infra-down dev
+.PHONY: all build run test unpack containerize infra-up infra-down dev-db dev
 
 all: build
 
@@ -38,10 +39,6 @@ build:
 	@echo "Building the application"; \
 	$(GRADLE) $(BUILD)
 	$(MAKE) unpack
-
-run:
-	@echo "Running the application"
-	$(GRADLE) $(RUN)
 
 test:
 	@echo "Running tests for product-api"; \
@@ -65,6 +62,9 @@ infra-up: build
 infra-down:
 	@echo "Cleaning up the development environment"; \
 	$(DOCKER_COMPOSE) down
+
+dev-db:
+	$(DOCKER_COMPOSE) up $(DOCKER_COMPOSE_DB)
 
 dev:
 	@echo "Running in development mode with profile: $(SPRING_PROFILE)"; \
