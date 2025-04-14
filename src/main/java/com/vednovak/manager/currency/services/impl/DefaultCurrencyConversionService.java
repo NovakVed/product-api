@@ -38,8 +38,8 @@ public class DefaultCurrencyConversionService implements CurrencyConversionServi
 
     @Override
     public BigDecimal convertPrice(BigDecimal basePrice, String currency) throws CurrencyExchangeRateException {
-        Validate.notNull(basePrice, NULL_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("BigDecimal"));
-        Validate.notBlank(currency, BLANK_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("String"));
+        Validate.notNull(basePrice, NULL_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("basePrice"));
+        Validate.notBlank(currency, BLANK_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("currency"));
 
         validateBasePrice(basePrice);
         validateCurrencySupport(currency);
