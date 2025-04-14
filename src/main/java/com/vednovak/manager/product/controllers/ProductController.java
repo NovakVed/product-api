@@ -111,11 +111,7 @@ public class ProductController {
             @Parameter(
                     description = "Unique code of the product",
                     required = true,
-                    example = "A000000001",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorDataList.class)
-                    )
+                    example = "A000000001"
             )
             @PathVariable
             @Valid
