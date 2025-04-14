@@ -1,6 +1,6 @@
 # Product API
 
-Product API: Manage and organize product data efficiently, with real-time currency conversion.
+CRUD Microservice created to manage and organize product data efficiently, with real-time currency conversion.
 
 ## Architecture
 ![Arhitecture.png](Arhitecture.png)
