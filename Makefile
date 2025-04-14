@@ -65,3 +65,7 @@ infra-up: build
 infra-down:
 	@echo "Cleaning up the development environment"; \
 	$(DOCKER_COMPOSE) down
+
+dev:
+	@echo "Running in development mode with profile: $(SPRING_PROFILE)"; \
+	$(GRADLE) $(RUN) -Dspring.profiles.active=$(SPRING_PROFILE) $(SPRING_PROPS)
