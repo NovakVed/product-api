@@ -7,7 +7,7 @@ CRUD Microservice created to manage and organize product data efficiently, with 
 
 ## Run instructions
 
-**Prerequisite**: Please make sure that you have at least Java 17 and Docker set up on your machine.
+**Prerequisite**: Please make sure that you have at least **Java 17** and **Docker** and **Postman** set up on your machine.
 
 For more details like running different spring profiles or options, please look
 at the [list of available Makefile commands](#makefile-commands)
@@ -60,3 +60,7 @@ Short summary of available endpoints in Product API, for more details and usage 
 | `/v1/products`       | GET    | Get all products                  | None           | None                       | None            |
 | `/v1/producs/{code}` | GET    | Get product by code               | None           | `code`                     | None            |
 | `/v1/help`           | GET    | Redirect to OpenAPI Documentation | None           | None                       | None            |
+
+### Test Endpoints
+
+You can use already created postman collection to test all of the above endpoints. Go to the `Postman` app and import `postman/product-api.postman_collection.json`.
