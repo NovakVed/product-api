@@ -7,9 +7,13 @@ import static com.vednovak.manager.product.utils.ProductConstants.ALLOWED_TEXT_R
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(description = "Represents the response containing error message")
 public record ErrorData(
-        @Schema(description = "The error message description", example = ALLOWED_TEXT_REGEX_VALIDATION_MESSAGE) String error,
-        @Schema(description = "In case of failed validation, name of the field that failed to get validated", example = "code") String field) {
+        @Schema(description = "The error message description", example = ALLOWED_TEXT_REGEX_VALIDATION_MESSAGE)
+        String error,
+        @Schema(description = "In case of failed validation, name of the field that failed to get validated", example = "code")
+        String field
+) {
 
     public static ErrorData withError(String error) {
         return new ErrorData(error, null);
