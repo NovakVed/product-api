@@ -42,6 +42,7 @@ build:
 
 test:
 	@echo "Running tests for product-api"; \
+	$(DOCKER_COMPOSE) up $(DOCKER_COMPOSE_DB) -d
 	$(GRADLE) $(TEST) -Dspring.profiles.active=test
 
 unpack:
