@@ -12,6 +12,7 @@ import com.vednovak.manager.product.mappers.ProductMapper;
 import com.vednovak.manager.product.repositories.ProductRepository;
 import com.vednovak.manager.product.services.ProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.Validate;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
@@ -43,15 +44,16 @@ public class DefaultProductService implements ProductService {
     @Override
     public ProductResponse createProduct(final ProductRequest productRequest)
             throws ProductSaveException, DuplicateProductCodeException, NullPointerException {
-        validateProductCodeUniqueness(productRequest.getCode());
-        final Product createdProduct = saveProduct(productRequest);
+        Validate.notNull(productRequest, NULL_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("ProductRequest"));
+        validateIfProductCodeExistsElseThrow(productRequest.getCode());
 
+        final Product createdProduct = saveProduct(productRequest);
         log.info("Product saved with code '{}'", createdProduct.getCode());
 
         return mapToProductResponse(createdProduct);
     }
 
-    private void validateProductCodeUniqueness(final String productCode) throws DuplicateProductCodeException {
+    private void validateIfProductCodeExistsElseThrow(final String productCode) throws DuplicateProductCodeException {
         if (productRepository.existsByCode(productCode)) {
             log.warn("Product with code '{}' already exists", productCode);
             throw new DuplicateProductCodeException(messageService.getMessage(ERROR_PRODUCT_ALREADY_EXISTS, productCode));
@@ -71,8 +73,14 @@ public class DefaultProductService implements ProductService {
     @Override
     public ProductResponse findProductByCode(final String productCode)
             throws ProductNotFoundException, NullPointerException {
+        validateProductCode(productCode);
+
         final Product product = findProductByCodeOrElseThrow(productCode);
         return mapToProductResponse(product);
+    }
+
+    private void validateProductCode(final String productCode) throws NullPointerException {
+        Validate.notBlank(productCode, BLANK_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted(productCode));
     }
 
     private Product findProductByCodeOrElseThrow(final String productCode) throws ProductNotFoundException {
@@ -84,7 +92,7 @@ public class DefaultProductService implements ProductService {
 
     private ProductResponse mapToProductResponse(final Product product) throws NullPointerException {
         final BigDecimal basePrice = product.getPriceEur();
-        // TODO: improve by make this per user / per request instead of hardcoding it like this!
+        // TODO: improve by making this per user session / or per request instead of hardcoding it like this
         final BigDecimal convertedPrice = currencyConversionService.convertPrice(basePrice, "USD");
         return productMapper.mapToProductResponse(product, convertedPrice);
     }

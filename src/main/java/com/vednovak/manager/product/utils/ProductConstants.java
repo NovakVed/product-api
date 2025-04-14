@@ -24,6 +24,7 @@ public class ProductConstants {
     public static final String ERROR_PRODUCT_SAVE  = "error.product.save";
 
     public static final String NULL_PARAMETER_ERROR_MESSAGE_TEMPLATE = "%s must not be null";
+    public static final String BLANK_PARAMETER_ERROR_MESSAGE_TEMPLATE = "%s must not be blank";
 
     private ProductConstants() {
         throw new IllegalStateException("Utility class");
