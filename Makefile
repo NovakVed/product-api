@@ -42,7 +42,7 @@ build:
 
 test:
 	@echo "Running tests for product-api"; \
-	$(GRADLE) $(TEST)
+	$(GRADLE) $(TEST) -Dspring.profiles.active=test
 
 unpack:
 	@if [ -f build/libs/*.jar ]; then \
