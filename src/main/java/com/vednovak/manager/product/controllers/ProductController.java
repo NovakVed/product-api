@@ -31,8 +31,6 @@ import java.util.List;
 import static com.vednovak.manager.product.utils.ProductConstants.*;
 import static com.vednovak.manager.product.utils.SwaggerConstants.*;
 
-// TODO: add ci.yaml for git (CI pipeline)
-// TODO: return correct http status codes for each request!
 @RestController
 @RequestMapping(ProductController.ENDPOINT)
 @Validated
