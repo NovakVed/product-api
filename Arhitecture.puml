@@ -1,0 +1,12 @@
+@startuml
+'https://plantuml.com/deployment-diagram
+
+actor User
+component Microservice
+database Database
+
+User -> Microservice : Request
+Microservice -> Database : Query
+Database --> Microservice : Data
+Microservice --> User : Response
+@enduml
