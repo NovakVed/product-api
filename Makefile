@@ -1,36 +1,59 @@
+IMAGE_NAME = product-api
+
 GRADLE = ./gradlew
 BUILD = build -x test
+TEST = test
+RUN = bootRun
+
+DEVELOPMENT_PROFILE = dev
+PRODUCTION_PROFILE = prod
+SPRING_PROFILE ?= $(DEVELOPMENT_PROFILE)
+
 DOCKER_COMPOSE = docker-compose
-IMAGE_NAME = product-api
+DOCKER_BUILD_WITH_ARG = docker build --build-arg
 
 .DEFAULT_GOAL := help
 
-# TODO - adjust
-
 help:
-	@echo "Makefile for Product API"
+	@echo
+	@echo "Product API Makefile"
 	@echo
 	@echo "Available commands:"
-	@echo "  make build                         - Build the entire project"
-	@echo "  make unpack                        - Unpack the JAR file"
-	@echo "  make containerize                  - Build the project and create the latest Docker image"
-	@echo "  make infra-up                      - Set up the project infrastructure using Docker Compose"
-	@echo "  make infra-down                    - Clean up the project infrastructure using Docker Compose"
+	@echo "  make build                   - Build the project"
+	@echo "  make run                     - Run the application"
+	@echo "  make test                    - Run tests"
+	@echo "  make unpack                  - Extract the JAR file"
+	@echo "  make containerize            - Build the Docker image"
+	@echo "  make infra-up                - Start infrastructure with Docker Compose"
+	@echo "  make infra-down              - Stop infrastructure with Docker Compose"
+	@echo "  make dev                     - Run in development mode (default profile: dev)"
+	@echo "                                 Use SPRING_PROFILE to override and SPRING_PROPS for extra properties"
 	@echo
 
-.PHONY: all build unpack containerize infra-up infra-down
+.PHONY: all build run test unpack containerize infra-up infra-down dev
 
 all: build
 
 build:
-	@echo "Building the product-api service"; \
+	@echo "Building the application"; \
 	$(GRADLE) $(BUILD)
-	@echo "Unpacking the JAR file"; \
-    mkdir -p build/dependency && (cd build/dependency; jar -xf ../libs/*.jar)
+	$(MAKE) unpack
+
+run:
+	@echo "Running the application"
+	$(GRADLE) $(RUN)
+
+test:
+	@echo "Running tests for product-api"; \
+	$(GRADLE) $(TEST)
 
 unpack:
-	@echo "Unpacking the JAR file"; \
-	mkdir -p build/dependency && (cd build/dependency; jar -xf ../libs/*.jar)
+	@if [ -f build/libs/*.jar ]; then \
+		echo "Unpacking the JAR file"; \
+		mkdir -p build/dependency && (cd build/dependency; jar -xf ../libs/*.jar); \
+	else \
+		echo "No JAR file found to unpack"; \
+	fi
 
 containerize: build unpack
 	docker build -t $(IMAGE_NAME) .
