@@ -22,7 +22,7 @@ public class DefaultMessageService implements MessageService {
     }
 
     // TODO: extend both methods below to accept locale as an argument and use this instead of Locale.getDefault()
-    //  make sure when changing to Locale.getDefault that all log.err messages are taken from Locale.getDefault() or Locale.EN!
+    //  make sure when changing to Locale.getDefault that all log.err messages are taken from Locale.getDefault() or Locale.EN
     @Override
     public String getMessage(final String key) {
         try {
