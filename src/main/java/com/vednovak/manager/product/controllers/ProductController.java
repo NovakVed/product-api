@@ -134,6 +134,7 @@ public class ProductController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ProductResponse> getProducts() throws NullPointerException {
+        // not sure if I should return only active products? currently I'm returning all of them no meter if they are active or not
         return productService.getProducts();
     }
 }
