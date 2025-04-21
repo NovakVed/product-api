@@ -22,7 +22,7 @@ public class DefaultProductMapper implements ProductMapper {
                 .code(productRequest.getCode())
                 .name(productRequest.getName())
                 .priceEur(productRequest.getPriceEur())
-                .isAvailable(Boolean.TRUE.equals(productRequest.isAvailable()))
+                .isAvailable(productRequest.isAvailable())
                 .build();
     }
 
