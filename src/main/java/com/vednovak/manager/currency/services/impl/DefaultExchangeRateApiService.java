@@ -30,7 +30,6 @@ public class DefaultExchangeRateApiService implements ExchangeRateApiService {
     private final String exchangeRateBaseApiUrl;
     private final String queryCurrencyForExchangeRateUrl;
     private final String queryDateForExchangeRateUrl;
-    private final Set<String> supportedCurrencies;
     private final MessageService messageService;
     private final RestTemplate restTemplate;
 
@@ -39,31 +38,29 @@ public class DefaultExchangeRateApiService implements ExchangeRateApiService {
             @Value("${exchange.rate.currency.query.api.url}") final String queryCurrencyForExchangeRateUrl,
             @Value("${exchange.rate.date.query.api.url}") final String queryDateForExchangeRateUrl,
             @Value("${exchange.rate.api.url.date.format}") final String dateFormatForExchangeRateUrl,
-            @Value("${supported.currencies}") final Set<String> supportedCurrencies,
             final MessageService messageService,
             final RestTemplate restTemplate) {
         this.dateFormatForExchangeRateUrl = dateFormatForExchangeRateUrl;
         this.exchangeRateBaseApiUrl = exchangeRateBaseApiUrl;
         this.queryCurrencyForExchangeRateUrl = queryCurrencyForExchangeRateUrl;
         this.queryDateForExchangeRateUrl = queryDateForExchangeRateUrl;
-        this.supportedCurrencies = supportedCurrencies;
         this.messageService = messageService;
         this.restTemplate = restTemplate;
     }
 
     @Override
-    public Set<CurrencyExchangeRateData> fetchExchangeRates() throws CurrencyExchangeRateException {
-        final String url = buildApiUrl();
+    public Set<CurrencyExchangeRateData> fetchExchangeRates(final Set<String> forCurrencies) throws CurrencyExchangeRateException {
+        final String url = buildApiUrl(forCurrencies);
         return fetchExchangeRatesFromApi(url).orElseThrow(() ->
              new CurrencyExchangeRateException(messageService.getMessage(ERROR_FAILED_EXCHANGE_RATE_DATA, url))
         );
     }
 
-    private String buildApiUrl() {
+    private String buildApiUrl(final Set<String> forCurrencies) {
         return StringUtils.join(
                 exchangeRateBaseApiUrl, QUERY_STRING_QUESTION_MARK,
                 buildDateQuery(), QUERY_STRING_SEPARATOR,
-                buildCurrencyQuery());
+                buildCurrencyQuery(forCurrencies));
     }
 
     private String buildDateQuery() {
@@ -79,8 +76,8 @@ public class DefaultExchangeRateApiService implements ExchangeRateApiService {
         }
     }
 
-    private String buildCurrencyQuery() {
-        return supportedCurrencies.stream()
+    private String buildCurrencyQuery(Set<String> currencies) {
+        return currencies.stream()
                 .map(currency -> StringUtils.join(queryCurrencyForExchangeRateUrl, currency))
                 .collect(Collectors.joining(QUERY_STRING_SEPARATOR));
     }

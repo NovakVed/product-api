@@ -8,6 +8,7 @@ public class CurrencyConstants {
     public static final String ERROR_FAILED_DATE_TIME_FORMAT = "error.failed.date.time.format";
     public static final String ERROR_VALIDATION_FETCHED_EXCHANGE_RATE = "error.validation.fetched.exchange.rates";
     public static final String ERROR_UNEXPECTED_EXCHANGE_RATE_UPDATE = "error.unexpected.exchange.rate.update";
+    public static final String ERROR_EXCHANGE_RAGE_NOT_FOUND_IN_CACHE = "error.exchange.rate.not.found.in.cache";
 
     public static final String QUERY_STRING_QUESTION_MARK = "?";
     public static final String QUERY_STRING_SEPARATOR = "&";

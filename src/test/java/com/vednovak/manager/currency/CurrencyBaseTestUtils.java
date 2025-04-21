@@ -6,5 +6,5 @@ public abstract class CurrencyBaseTestUtils {
     protected static final String USD_CURRENCY_CODE = "USD";
     protected static final String HRK_CURRENCY_CODE = "HRK";
 
-    protected static final int WANTED_NUMBER_OF_INVOCATIONS = 1;
+    protected static final int SINGLE_INVOCATION = 1;
 }

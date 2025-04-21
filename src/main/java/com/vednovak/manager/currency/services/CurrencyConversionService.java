@@ -6,5 +6,5 @@ import java.math.BigDecimal;
 
 public interface CurrencyConversionService {
 
-    BigDecimal convertPrice(BigDecimal basePrice, String currency) throws CurrencyExchangeRateException;
+    BigDecimal convertToCurrency(BigDecimal basePrice, String currency) throws CurrencyExchangeRateException;
 }

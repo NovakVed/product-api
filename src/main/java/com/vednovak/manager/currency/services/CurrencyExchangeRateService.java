@@ -4,11 +4,11 @@ import com.vednovak.manager.currency.exceptions.CurrencyExchangeRateException;
 import com.vednovak.manager.currency.exceptions.EmptySupportedCurrenciesConfig;
 
 import java.math.BigDecimal;
-import java.util.Map;
+import java.util.Set;
 
 public interface CurrencyExchangeRateService {
 
-    void updateExchangeRates() throws CurrencyExchangeRateException, EmptySupportedCurrenciesConfig;
+    void refreshExchangeRates(final Set<String> forCurrencies) throws CurrencyExchangeRateException, EmptySupportedCurrenciesConfig;
 
-    Map<String, BigDecimal> getExchangeRates();
+    BigDecimal findOrFetchExchangeRate(String fromCurrency) throws CurrencyExchangeRateException;
 }

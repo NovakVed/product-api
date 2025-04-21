@@ -6,13 +6,11 @@ import com.vednovak.manager.currency.services.CurrencyExchangeRateService;
 import com.vednovak.manager.message.services.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.Validate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Set;
 
 import static com.vednovak.manager.currency.utils.CurrencyConstants.*;
 
@@ -23,48 +21,37 @@ public class DefaultCurrencyConversionService implements CurrencyConversionServi
 
     private static final int ROUNDING_SCALE = 2;
 
-    private final Set<String> supportedCurrencies;
     private final CurrencyExchangeRateService currencyExchangeRateService;
     private final MessageService messageService;
 
     public DefaultCurrencyConversionService(
-            @Value("${supported.currencies}") final Set<String> supportedCurrencies,
             CurrencyExchangeRateService currencyExchangeRateService,
             MessageService messageService) {
-        this.supportedCurrencies = supportedCurrencies;
         this.currencyExchangeRateService = currencyExchangeRateService;
         this.messageService = messageService;
     }
 
     @Override
-    public BigDecimal convertPrice(BigDecimal basePrice, String currency) throws CurrencyExchangeRateException {
-        Validate.notNull(basePrice, NULL_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("basePrice"));
-        Validate.notBlank(currency, BLANK_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("currency"));
+    public BigDecimal convertToCurrency(final BigDecimal basePrice, final String currency) throws CurrencyExchangeRateException {
+        validateInputs(basePrice, currency);
 
-        validateBasePrice(basePrice);
-        validateCurrencySupport(currency);
-
-        BigDecimal exchangeRate = getExchangeRateForCurrency(currency);
-
+        final BigDecimal exchangeRate = currencyExchangeRateService.findOrFetchExchangeRate(currency);
         return calculateConvertedPrice(basePrice, exchangeRate);
     }
 
-    private void validateBasePrice(final BigDecimal basePrice) throws CurrencyExchangeRateException {
+    private void validateInputs(final BigDecimal basePrice, final String currency)
+            throws CurrencyExchangeRateException {
+        Validate.notNull(basePrice, NULL_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("basePrice"));
+        Validate.notBlank(currency, BLANK_PARAMETER_ERROR_MESSAGE_TEMPLATE.formatted("currency"));
+
+        validatePrice(basePrice);
+    }
+
+    private void validatePrice(final BigDecimal basePrice) throws CurrencyExchangeRateException {
         if (basePrice.compareTo(BigDecimal.ZERO) < 0) {
             log.error("Invalid base price: {}. It must be a non-negative value.", basePrice);
             throw new CurrencyExchangeRateException(messageService.getMessage(ERROR_INVALID_BASE_PRICE));
         }
-    }
-
-    private void validateCurrencySupport(final String currency) throws CurrencyExchangeRateException {
-        if (!supportedCurrencies.contains(currency)) {
-            log.error("Invalid currency: {}. It is not supported.", currency);
-            throw new CurrencyExchangeRateException(messageService.getMessage(ERROR_CURRENCY_NOT_SUPPORTED, currency));
-        }
-    }
-
-    private BigDecimal getExchangeRateForCurrency(final String currency) {
-        return currencyExchangeRateService.getExchangeRates().get(currency);
     }
 
     private BigDecimal calculateConvertedPrice(final BigDecimal basePrice, final BigDecimal exchangeRate) {

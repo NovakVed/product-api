@@ -15,10 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Map;
-import java.util.Set;
 
-import static com.vednovak.manager.currency.utils.CurrencyConstants.ERROR_CURRENCY_NOT_SUPPORTED;
 import static com.vednovak.manager.currency.utils.CurrencyConstants.ERROR_INVALID_BASE_PRICE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -39,7 +36,6 @@ class DefaultCurrencyConversionServiceTest extends CurrencyBaseTestUtils {
     @BeforeEach
     void setUp() {
         defaultCurrencyConversionService = new DefaultCurrencyConversionService(
-                Set.of(EUR_CURRENCY_CODE, USD_CURRENCY_CODE),
                 currencyExchangeRateService,
                 messageService);
     }
@@ -47,7 +43,7 @@ class DefaultCurrencyConversionServiceTest extends CurrencyBaseTestUtils {
     @Test
     @DisplayName("When base price is null, then throw exception")
     void whenBasePriceIsNull_ThenThrowException() {
-        assertThatThrownBy(() -> defaultCurrencyConversionService.convertPrice(null, USD_CURRENCY_CODE))
+        assertThatThrownBy(() -> defaultCurrencyConversionService.convertToCurrency(null, USD_CURRENCY_CODE))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessageContaining("basePrice must not be null");
     }
@@ -55,7 +51,7 @@ class DefaultCurrencyConversionServiceTest extends CurrencyBaseTestUtils {
     @Test
     @DisplayName("When currency is blank, then throw exception")
     void whenCurrencyIsBlank_ThenThrowException() {
-        assertThatThrownBy(() -> defaultCurrencyConversionService.convertPrice(BigDecimal.TEN, StringUtils.SPACE))
+        assertThatThrownBy(() -> defaultCurrencyConversionService.convertToCurrency(BigDecimal.TEN, StringUtils.SPACE))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("currency must not be blank");
     }
@@ -67,45 +63,32 @@ class DefaultCurrencyConversionServiceTest extends CurrencyBaseTestUtils {
 
         final BigDecimal basePrice = BigDecimal.valueOf(-10);
 
-        assertThatThrownBy(() -> defaultCurrencyConversionService.convertPrice(basePrice, USD_CURRENCY_CODE))
+        assertThatThrownBy(() -> defaultCurrencyConversionService.convertToCurrency(basePrice, USD_CURRENCY_CODE))
                 .isInstanceOf(CurrencyExchangeRateException.class)
                 .hasMessage("Invalid base price");
 
-        verify(messageService, times(1)).getMessage(ERROR_INVALID_BASE_PRICE);
+        verify(messageService, times(SINGLE_INVOCATION)).getMessage(ERROR_INVALID_BASE_PRICE);
     }
 
     @Test
     @DisplayName("When currency is not supported, then throw exception")
     void whenCurrencyIsNotSupported_ThenThrowException() {
-        when(messageService.getMessage(ERROR_CURRENCY_NOT_SUPPORTED, HRK_CURRENCY_CODE))
-                .thenReturn("Currency not supported");
+        when(currencyExchangeRateService.findOrFetchExchangeRate(HRK_CURRENCY_CODE))
+                .thenThrow(CurrencyExchangeRateException.class);
 
-        assertThatThrownBy(() -> defaultCurrencyConversionService.convertPrice(BigDecimal.TEN, HRK_CURRENCY_CODE))
-                .isInstanceOf(CurrencyExchangeRateException.class)
-                .hasMessage("Currency not supported");
-
-        verify(messageService, times(WANTED_NUMBER_OF_INVOCATIONS)).getMessage(ERROR_CURRENCY_NOT_SUPPORTED, HRK_CURRENCY_CODE);
+        assertThatThrownBy(() -> defaultCurrencyConversionService.convertToCurrency(BigDecimal.TEN, HRK_CURRENCY_CODE))
+                .isInstanceOf(CurrencyExchangeRateException.class);
     }
 
     @Test
     @DisplayName("When exchange rate is available, then return converted price")
     void whenExchangeRateIsAvailable_ThenReturnConvertedPrice() {
-        when(currencyExchangeRateService.getExchangeRates()).thenReturn(Map.of(USD_CURRENCY_CODE, BigDecimal.valueOf(1.2)));
+        when(currencyExchangeRateService.findOrFetchExchangeRate(USD_CURRENCY_CODE))
+                .thenReturn(BigDecimal.valueOf(1.2));
 
-        final BigDecimal result = defaultCurrencyConversionService.convertPrice(BigDecimal.TEN, USD_CURRENCY_CODE);
+        final BigDecimal result = defaultCurrencyConversionService.convertToCurrency(BigDecimal.TEN, USD_CURRENCY_CODE);
 
         assertThat(result).isEqualTo(BigDecimal.valueOf(12.00).setScale(2, RoundingMode.HALF_UP));
-        verify(currencyExchangeRateService, times(WANTED_NUMBER_OF_INVOCATIONS)).getExchangeRates();
-    }
-
-    @Test
-    @DisplayName("When exchange rate is missing, then throw exception")
-    void whenExchangeRateIsMissing_ThenThrowException() {
-        when(currencyExchangeRateService.getExchangeRates()).thenReturn(Map.of());
-
-        assertThatThrownBy(() -> defaultCurrencyConversionService.convertPrice(BigDecimal.TEN, USD_CURRENCY_CODE))
-                .isInstanceOf(NullPointerException.class);
-
-        verify(currencyExchangeRateService, times(1)).getExchangeRates();
+        verify(currencyExchangeRateService, times(SINGLE_INVOCATION)).findOrFetchExchangeRate(USD_CURRENCY_CODE);
     }
 }

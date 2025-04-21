@@ -93,7 +93,7 @@ public class DefaultProductService implements ProductService {
     private ProductResponse mapToProductResponse(final Product product) throws NullPointerException {
         final BigDecimal basePrice = product.getPriceEur();
         // TODO: improve by making this per user session / or per request instead of hardcoding it like this
-        final BigDecimal convertedPrice = currencyConversionService.convertPrice(basePrice, "USD");
+        final BigDecimal convertedPrice = currencyConversionService.convertToCurrency(basePrice, "USD");
         return productMapper.mapToProductResponse(product, convertedPrice);
     }
 

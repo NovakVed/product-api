@@ -7,5 +7,5 @@ import java.util.Set;
 
 public interface ExchangeRateApiService {
 
-    Set<CurrencyExchangeRateData> fetchExchangeRates() throws CurrencyExchangeRateException;
+    Set<CurrencyExchangeRateData> fetchExchangeRates(Set<String> forCurrencies) throws CurrencyExchangeRateException;
 }

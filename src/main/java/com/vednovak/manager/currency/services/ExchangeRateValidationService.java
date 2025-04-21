@@ -11,4 +11,8 @@ public interface ExchangeRateValidationService {
     void validateSupportedCurrenciesNotEmpty() throws EmptySupportedCurrenciesConfig;
 
     void validateFetchedExchangeRates(Set<CurrencyExchangeRateData> fetchedExchangeRates) throws CurrencyExchangeRateException;
+
+    void validateIfCurrenciesAreSupported(Set<String> fromCurrencies) throws CurrencyExchangeRateException;
+
+    void validateCurrencyIsSupport(String currency) throws CurrencyExchangeRateException;
 }

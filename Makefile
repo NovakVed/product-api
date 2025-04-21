@@ -40,7 +40,7 @@ build:
 	$(GRADLE) $(BUILD)
 	$(MAKE) unpack
 
-test:
+test: dev-db
 	@echo "Running tests for product-api"; \
 	$(GRADLE) $(TEST) -Dspring.profiles.active=test
 
@@ -64,7 +64,7 @@ infra-down:
 	$(DOCKER_COMPOSE) down
 
 dev-db:
-	$(DOCKER_COMPOSE) up $(DOCKER_COMPOSE_DB)
+	$(DOCKER_COMPOSE) up $(DOCKER_COMPOSE_DB) -d
 
 dev:
 	@echo "Running in development mode with profile: $(SPRING_PROFILE)"; \

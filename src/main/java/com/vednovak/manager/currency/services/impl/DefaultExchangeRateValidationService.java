@@ -62,4 +62,17 @@ public class DefaultExchangeRateValidationService implements ExchangeRateValidat
                     missingCurrencies);
         }
     }
+
+    @Override
+    public void validateIfCurrenciesAreSupported(Set<String> fromCurrencies) throws CurrencyExchangeRateException {
+        fromCurrencies.forEach(this::validateCurrencyIsSupport);
+    }
+
+    @Override
+    public void validateCurrencyIsSupport(String currency) throws CurrencyExchangeRateException {
+        if (!supportedCurrencies.contains(currency)) {
+            log.error("Invalid currency: {}. It is not supported.", currency);
+            throw new CurrencyExchangeRateException(messageService.getMessage(ERROR_CURRENCY_NOT_SUPPORTED, currency));
+        }
+    }
 }
