@@ -29,5 +29,5 @@ public class Product {
     @Column(nullable = false)
     private BigDecimal priceEur;
 
-    private Boolean isAvailable;
+    private boolean isAvailable;
 }

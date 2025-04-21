@@ -36,7 +36,7 @@ public class DefaultProductMapper implements ProductMapper {
                 product.getName(),
                 product.getPriceEur(),
                 sellingRate,
-                product.getIsAvailable()
+                product.isAvailable()
         );
     }
 }

@@ -29,7 +29,7 @@ class ProductMapperTest extends ProductBaseTestUtils {
         assertThat(product.getCode()).isEqualTo(productRequest.getCode());
         assertThat(product.getName()).isEqualTo(productRequest.getName());
         assertThat(product.getPriceEur()).isEqualTo(productRequest.getPriceEur());
-        assertThat(product.getIsAvailable()).isTrue();
+        assertThat(product.isAvailable()).isTrue();
     }
 
     @Test
