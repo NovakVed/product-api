@@ -100,8 +100,7 @@ public class DefaultCurrencyExchangeRateService implements CurrencyExchangeRateS
             refetchAndRepopulateCacheIfMissing(fromCurrency);
             return exchangeRatesCache.get(fromCurrency);
         } catch (final NullPointerException ex) {
-            throw new CurrencyExchangeRateException(
-                    messageService.getMessage(ERROR_EXCHANGE_RAGE_NOT_FOUND_IN_CACHE, fromCurrency));
+            throw new CurrencyExchangeRateException(messageService.getMessage(ERROR_EXCHANGE_RAGE_NOT_FOUND_IN_CACHE, fromCurrency));
         }
     }
 
